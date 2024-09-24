@@ -1,10 +1,18 @@
 using AlmaMaria_AP1_1.Components;
+using AlmaMaria_AP1_1.DAL;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+
+var ConStr = builder.Configuration.GetConnectionString("ConStr");
+builder.Services.AddDbContext<Contexto>(r => r.UseSqlite(ConStr));
+
+
 
 var app = builder.Build();
 
