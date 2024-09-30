@@ -1,5 +1,6 @@
 using AlmaMaria_AP1_1.Components;
 using AlmaMaria_AP1_1.DAL;
+using AlmaMaria_AP1_1.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ builder.Services.AddRazorComponents()
 
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
 builder.Services.AddDbContext<Contexto>(r => r.UseSqlite(ConStr));
+
+builder.Services.AddScoped<PrestamosServices>();
 
 
 
