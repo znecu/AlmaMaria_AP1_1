@@ -9,7 +9,7 @@ public class PrestamosServices(Contexto contexto)
 {
     public async Task<bool> Guardar(Prestamos prestamo)
     {
-        if (!await Existe(prestamo.PrestamoId)) ;
+        if (!await Existe(prestamo.PrestamoId))
             return await Insertar(prestamo);
         else
             return await Modificar(prestamo);
