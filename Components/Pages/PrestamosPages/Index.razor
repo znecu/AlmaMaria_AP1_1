@@ -1,0 +1,93 @@
+﻿@page "/Prestamo/Index/"
+@using AlmaMaria_AP1_1.Models
+@using AlmaMaria_AP1_1.Services
+@inject NavigationManager navigationManager
+@inject PrestamosServices presamosServices
+@rendermode InteractiveServer
+
+<PageTitle>Index</PageTitle>
+<div class="container">
+    <div class="shadow-lg">
+
+        @*Header*@
+        <div class="card-header">
+            <h5><strong>Registro de Prestamos</strong></h5>
+        </div>
+
+        @*Body*@
+        <div class="card-body">
+
+            <a href="/Prestamo/Create" class="btn btn-primary">
+                <span class="bi bi-plus-square-fill-nav-menu mt-3"></span> Crear
+            </a>
+
+            @*Tabla*@
+            <table class="table table-bordered mt-4">
+                <thead class="table table-striped">
+                    <tr>
+                        <td>PrestamoId</td>
+                        <td>Deudor</td>
+                        <td>Concepto</td>
+                        <td>Monto</td>
+                        <td>Detail</td>
+                        <td>Edit</td>
+                        <td>Delete</td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var prestamo in ListaPrestamos)
+                    {
+                        <tr>
+                            <td>@prestamo.PrestamoId</td>
+                            <td>@prestamo.Deudor</td>
+                            <td>@prestamo.Concepto</td>
+                            <td>@prestamo.Monto</td>
+
+                            @*Observar*@
+                            <td class="text-center">
+                                <a href="/Prestamo/Detail/@prestamo.PrestamoId"><button type="button" class=" btn bi bi-eye"></button> </a>
+                            </td>
+
+                            @*Editar*@
+                            <td class="text-center">
+                                <a href="/Prestamo/Edit/@prestamo.PrestamoId"><button type="button" class="btn bi bi-pencil"></button></a>
+                            </td>
+
+                            @*Eliminar*@
+                            <td class="text-center">
+                                <a href="/Prestamo/Eliminar/@prestamo.PrestamoId"><button type="button" class="btn bi bi-trash"></button></a>
+                            </td>
+
+                        </tr>
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        @*Footer*@
+        <div class="card-footer">
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Prestamos> ListaPrestamos { get; set; } = new List<Prestamos>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaPrestamos = await presamosServices.Listar(p => p.PrestamoId > 0);
+    }
+  
+}
+
+@* <a href="#"
+   class="btn btn-primary"
+                    <span class="bi bi-floppy mt-3"></span>Guardar
+                </a>
+
+<a href="#"
+   class="btn btn-primary"
+                    <span class="bi bi-arrow-left mt-3"></span>Volver
+                </a> *@
