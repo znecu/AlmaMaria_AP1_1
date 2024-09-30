@@ -41,7 +41,7 @@ public class PrestamosServices(Contexto contexto)
             .ExecuteDeleteAsync() > 0;
     }
 
-    public async Task<Prestamos> Buscar(int prestamoId)
+    public async Task<Prestamos?> Buscar(int prestamoId)
     {
         return await contexto.Prestamos
             .AsNoTracking()
