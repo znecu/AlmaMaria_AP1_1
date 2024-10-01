@@ -1,5 +1,49 @@
-﻿<h3>Details</h3>
+﻿
+@page "/Prestamo/Details/{PrestamoId:int}"
+@using AlmaMaria_AP1_1.Models
+@using AlmaMaria_AP1_1.Services
+@inject PrestamosServices prestamosServices
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
 
+<PageTitle>Delete</PageTitle>
+<div class="container">
+    <div class="shadow-lg">
+        @*Header*@
+        <div class="card-header text-center">
+            <h3><strong>Detalle del prestamo</strong></h3>
+        </div>
+
+        @*Body*@
+        <div class="card-body">       
+            <ul class="mt-4">
+                <li><strong>PrestamoId: </strong>@Prestamo.PrestamoId</li>
+                <li><strong>Deudor: </strong>@Prestamo.Deudor</li>
+                <li><strong>Concepto: </strong>@Prestamo.Concepto</li>
+                <li><strong>Monto: </strong>@Prestamo.Monto</li>
+
+            </ul>
+        </div>
+        @*Footer*@
+        <div class="card-footer">
+            <button type="button" class="btn btn-primary bi bi-floppy mt-3" @onclick="Volver">Volver</button>
+        </div>
+    </div>
+
+</div>
 @code {
+    [Parameter]
+    public int PrestamoId { get; set; }
+    public Prestamos Prestamo { get; set; } = new Prestamos();
+    public string Mensaje { get; set; } = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        Prestamo = await prestamosServices.Buscar(PrestamoId);
+    }
+
+    public void Volver()
+    {
+        navigationManager.NavigateTo("/Prestamo/Index");
+    }
 }

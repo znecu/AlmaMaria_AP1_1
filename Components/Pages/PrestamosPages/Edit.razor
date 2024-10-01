@@ -1,5 +1,91 @@
-﻿<h3>Edit</h3>
+﻿@page "/Prestamo/Edit/{PrestamoId:int}"
+@using AlmaMaria_AP1_1.Models
+@using AlmaMaria_AP1_1.Services
+@inject PrestamosServices prestamosServices
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create</PageTitle>
+<EditForm Model="Prestamo" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+
+    <div class="container">
+        <div class="shadow-lg">
+            @*Header*@
+            <div class="card-header text-center">
+                <h3><strong>Crear prestamo</strong></h3>
+            </div>
+
+            @*Body*@
+            <div class="card-body">
+
+                @*PrestamoId*@
+                <div class="col-1">
+                    <label class="form-label"><strong>PrestamoId</strong></label>
+                    <InputNumber class="form-control" readonly @bind-Value="Prestamo.PrestamoId"></InputNumber>
+                </div>
+
+                @*Deudor*@
+                <div class="col-2 mt-2">
+                    <label class="form-label"><strong>Deudor</strong></label>
+                    <InputText class="form-control" @bind-Value="Prestamo.Deudor"></InputText>
+                </div>
+
+                @*Concepto*@
+                <div class="col-2 mt-2">
+                    <label class="form-label"><strong>Concepto</strong></label>
+                    <InputText class="form-control" @bind-Value="Prestamo.Concepto"></InputText>
+                </div>
+                @*Monto*@
+                <div class="col-2 mt-2">
+                    <label class="form-label"><strong>Monto</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Prestamo.Monto"></InputNumber>
+                </div>
+
+            </div>
+            @*Footer*@
+            <div class="card-footer">
+                <button type="button" class=" btn btn-primary bi bi-floppy mt-3" @onclick="() => Volver()">Volver</button>
+                <button type="submit" class=" btn btn-success bi bi-arrow-left mt-3">Guardar</button>
+
+            </div>
+        </div>
+    </div>
+
+    @Mensaje
+</EditForm>
+
 
 @code {
+    [Parameter]
+    public int PrestamoId { get; set; }
+    public Prestamos Prestamo { get; set; } = new Prestamos();
+    public string Mensaje { get; set; } = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        Prestamo = await prestamosServices.Buscar(PrestamoId);
+    }
+
+    public async Task Guardar()
+    {
+        var crear = await prestamosServices.Guardar(Prestamo);
+
+        if (crear)
+        {
+            Mensaje = "Creado exitosamente.";
+            Volver();
+        }
+
+        else
+        {
+            Mensaje = "No se ha podido crear el prestamo. ";
+        }
+    }
+
+    public void Volver()
+    {
+        navigationManager.NavigateTo("/Prestamo/Index");
+    }
 }
