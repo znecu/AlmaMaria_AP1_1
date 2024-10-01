@@ -1,5 +1,74 @@
-﻿<h3>Delete</h3>
+﻿@page "/Prestamo/Delete/{PrestamoId:int}"
+@using AlmaMaria_AP1_1.Models
+@using AlmaMaria_AP1_1.Services
+@inject PrestamosServices prestamosServices
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Delete</PageTitle>
+<div class="container">
+    <div class="shadow-lg">
+        @*Header*@
+        <div class="card-header text-center">
+            <h3><strong>Eliminar un prestamo</strong></h3>
+        </div>
+
+        @*Body*@
+        div class="card-body">
+        <div class="text-center mt-3">
+            <h5><strong>¿Está seguro de que desea eliminar este prestamo?</strong></h5>
+        </div>
+        <ul class="mt-4">
+            <li><strong>PrestamoId: </strong>@Prestamo.PrestamoId</li>
+            <li><strong>Deudor: </strong>@Prestamo.Deudor</li>
+            <li><strong>Monto: </strong>@Prestamo.Monto</li>
+
+        </ul>
+    </div>
+    @*Footer*@
+    <div class="card-footer">
+
+        <a href=""
+           class="btn btn-primary"
+            <span class="bi bi-floppy mt-3"><button type="submit"></button></span>Guardar
+            </a>
+
+        <a href="/Prestamo/Index"
+           class="btn btn-primary"
+            <span class="bi bi-arrow-left mt-3"><button type="submit"></button></span>Volver
+            </a>
+    </div>
+</div>
+
 
 @code {
+    [Parameter]
+    public int PrestamoId { get; set; }
+    public Prestamos Prestamo { get; set; } = new Prestamos();
+    public string Mensaje { get; set; } = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        Prestamo = await prestamosServices.Buscar(PrestamoId);
+    }
+
+    private async Task Eliminar()
+    {
+        var Eliminar = await prestamosServices.Eliminar(PrestamoId);
+
+        if (Eliminar)
+        {
+            Mensaje = "Se ha eliminadao correctamente. ";
+            Volver();
+        }
+        else
+        {
+            Mensaje = "No se ha podido eliminar. ";
+        }
+    }
+
+    public void Volver()
+    {
+        navigationManager.NavigateTo("/TipoTecnico/Index");
+    }
 }
