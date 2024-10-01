@@ -14,33 +14,27 @@
         </div>
 
         @*Body*@
-        div class="card-body">
-        <div class="text-center mt-3">
-            <h5><strong>¿Está seguro de que desea eliminar este prestamo?</strong></h5>
+        <div class="card-body">
+            <div class="text-center mt-3">
+                <h5><strong>¿Está seguro de que desea eliminar este prestamo?</strong></h5>
+            </div>
+            <ul class="mt-4">
+                <li><strong>PrestamoId: </strong>@Prestamo.PrestamoId</li>
+                <li><strong>Deudor: </strong>@Prestamo.Deudor</li>
+                <li><strong>Concepto: </strong>@Prestamo.Concepto</li>
+                <li><strong>Monto: </strong>@Prestamo.Monto</li>
+
+            </ul>
         </div>
-        <ul class="mt-4">
-            <li><strong>PrestamoId: </strong>@Prestamo.PrestamoId</li>
-            <li><strong>Deudor: </strong>@Prestamo.Deudor</li>
-            <li><strong>Monto: </strong>@Prestamo.Monto</li>
+        @*Footer*@
+        <div class="card-footer">
+            <button type="button" class="btn btn-primary bi bi-floppy mt-3" @onclick="Volver">Volver</button>
+            <button type="button" class="btn btn-danger bi bi-arrow-left mt-3" @onclick="Eliminar">Eliminar</button>
 
-        </ul>
+        </div>
     </div>
-    @*Footer*@
-    <div class="card-footer">
 
-        <a href=""
-           class="btn btn-primary"
-            <span class="bi bi-floppy mt-3"><button type="submit"></button></span>Guardar
-            </a>
-
-        <a href="/Prestamo/Index"
-           class="btn btn-primary"
-            <span class="bi bi-arrow-left mt-3"><button type="submit"></button></span>Volver
-            </a>
-    </div>
 </div>
-
-
 @code {
     [Parameter]
     public int PrestamoId { get; set; }
@@ -69,6 +63,6 @@
 
     public void Volver()
     {
-        navigationManager.NavigateTo("/TipoTecnico/Index");
+        navigationManager.NavigateTo("/Prestamo/Index");
     }
 }
