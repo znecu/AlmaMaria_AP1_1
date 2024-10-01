@@ -6,7 +6,7 @@
 @rendermode InteractiveServer
 
 <PageTitle>Create</PageTitle>
-<EditForm Model="Prestamo">
+<EditForm Model="Prestamo" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
 
@@ -30,32 +30,28 @@
                 <div class="col-2 mt-2">
                     <label class="form-label"><strong>Deudor</strong></label>
                     <InputText class="form-control" @bind-Value="Prestamo.Deudor"></InputText>
+                    <ValidationMessage For="(()=> Prestamo.Deudor)" />
                 </div>
 
                 @*Concepto*@
                 <div class="col-2 mt-2">
                     <label class="form-label"><strong>Concepto</strong></label>
                     <InputText class="form-control" @bind-Value="Prestamo.Concepto"></InputText>
+                    <ValidationMessage For="(()=> Prestamo.Concepto)" />
                 </div>
                 @*Monto*@
                 <div class="col-2 mt-2">
                     <label class="form-label"><strong>Monto</strong></label>
                     <InputNumber class="form-control" @bind-Value="Prestamo.Monto"></InputNumber>
+                    <ValidationMessage For="(()=> Prestamo.Monto)" />
                 </div>
 
             </div>
             @*Footer*@
             <div class="card-footer">
-
-                <a href="/Prestamo/Index"
-                   class="btn btn-primary"
-            <span class="bi bi-floppy mt-3"><button type="submit"></button></span>Guardar
-            </a>
-
-                <a href="/Prestamo/Index"
-                   class="btn btn-primary"
-            <span class="bi bi-arrow-left mt-3"><button type="submit"></button></span>Volver
-            </a>
+                <button type="button" class=" btn btn-primary bi bi-floppy mt-3" @onclick="() => Volver()">Volver</button>
+                <button type="submit" class=" btn btn-success bi bi-arrow-left mt-3">Guardar</button>
+                
             </div>
         </div>
     </div>
@@ -84,8 +80,6 @@
             Mensaje = "No se ha podido crear el prestamo. ";
         }
     }
-
-
 
     public void Volver()
     {
