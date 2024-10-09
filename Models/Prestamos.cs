@@ -8,15 +8,19 @@ public class Prestamos
     public int PrestamoId { get; set; }
 
     [Required]
-    [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "En este campo solo se permiten letras. ")]
-    public string? Deudor { get; set; }  
+    public string? Deudores { get; set; }
 
     [Required]
     [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "En este campo solo se permiten letras. ")]
     public string? Concepto { get; set; }
 
 
-    [Required]
-    [RegularExpression(@"^\d+$", ErrorMessage =("Este campo solo permite números. "))]
+    [Required(ErrorMessage = "Este campo es obligatorio. ")]
+    [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un numero valido")]
     public decimal Monto { get; set; }
+
+    [Required(ErrorMessage = "Este campo es obligatorio. ")]
+    [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un número válido. ")]
+    public decimal Balance { get; set; }
+
 }
