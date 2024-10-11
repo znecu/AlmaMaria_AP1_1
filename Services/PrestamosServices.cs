@@ -9,10 +9,13 @@ public class PrestamosServices(Contexto contexto)
 {
     public async Task<bool> Guardar(Prestamos prestamo)
     {
+        prestamo.Balance = prestamo.Monto;
+
         if (!await Existe(prestamo.PrestamoId))
             return await Insertar(prestamo);
         else
             return await Modificar(prestamo);
+
     }
 
     private async Task<bool> Modificar(Prestamos prestamo)
@@ -52,6 +55,7 @@ public class PrestamosServices(Contexto contexto)
     {
         return await contexto.Prestamos
             .AsNoTracking()
+            .Where(criterio)
             .ToListAsync();
     }
 }
