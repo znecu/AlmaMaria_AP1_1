@@ -60,4 +60,11 @@ public class CobroService(Contexto contexto)
             .Where(criterio)
             .ToListAsync();
     }
+
+    public async Task<List<Deudores>> ListarDeudores()
+    {
+        return await contexto.Deudores
+            .AsNoTracking()
+            .ToListAsync();
+    }
 }
