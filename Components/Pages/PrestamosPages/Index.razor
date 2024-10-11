@@ -2,7 +2,7 @@
 @using AlmaMaria_AP1_1.Models
 @using AlmaMaria_AP1_1.Services
 @inject NavigationManager navigationManager
-@inject PrestamoService prestamosServices
+@inject PrestamoService prestamoService
 
 @rendermode InteractiveServer
 
@@ -78,7 +78,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaPrestamos = await presamosServices.Listar(p => p.PrestamoId > 0);
+        ListaPrestamos = await prestamoService.Listar(p => p.PrestamoId > 0);
     }
 
 }
