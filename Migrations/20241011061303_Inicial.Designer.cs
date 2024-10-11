@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlmaMaria_AP1_1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20241011042714_Inicial")]
+    [Migration("20241011061303_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -52,6 +52,9 @@ namespace AlmaMaria_AP1_1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Fecha")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Monto")
                         .HasColumnType("TEXT");
 
                     b.HasKey("CobroId");

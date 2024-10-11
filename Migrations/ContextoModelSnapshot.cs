@@ -51,6 +51,9 @@ namespace AlmaMaria_AP1_1.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("Monto")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("CobroId");
 
                     b.HasIndex("DeudorId");

@@ -33,6 +33,7 @@ namespace AlmaMaria_AP1_1.Migrations
                     CobroId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Monto = table.Column<decimal>(type: "TEXT", nullable: false),
                     DeudorId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
