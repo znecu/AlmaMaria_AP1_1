@@ -1,0 +1,79 @@
+﻿@page "/Cobro/Index"
+@using AlmaMaria_AP1_1.Models
+@using AlmaMaria_AP1_1.Services
+@inject CobroService 
+@rendermode InteractiveServer
+
+<PageTitle>Index</PageTitle>
+<div class="container">
+    <div class="shadow-lg">
+
+        @*Header*@
+        <div class="card-header">
+            <h5><strong>Registro de Cobros</strong></h5>
+        </div>
+
+        @*Body*@
+        <div class="card-body">
+
+            <a href="/Prestamo/Create" class="btn btn-primary">
+                <span class="bi bi-plus-square-fill-nav-menu mt-3"></span> Crear
+            </a>
+
+            @*Tabla*@
+            <table class="table table-bordered mt-4">
+                <thead class="table table-striped">
+                    <tr>
+                        <th>CobroId</th>
+                        <th>Deudor</th>
+                        <th>Fecha</th>
+                        <th>Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var cobro in ListaCobros)
+                    {
+                        <tr>
+                            <td>@cobro.CobroId</td>
+                            <td>@cobro.Deudores.Nombres</td>
+                            <td>@cobro.Fecha</td>
+                            <td>@cobro.Monto</td>
+
+                            @*Observar*@
+                            <td class="text-center">
+                                <a href="/Cobro/Details/@cobro.CobroId"><button type="button" class=" btn bi bi-eye"></button></a>
+                            </td>
+
+                            @*Editar*@
+                            <td class="text-center">
+                                <a href="/Cobro/Edit/@cobro.CobroId"><button type="button" class="btn bi bi-pencil"></button></a>
+                            </td>
+
+                            @*Eliminar*@
+                            <td class="text-center">
+                                <a href="/Cobro/Delete/@cobro.CobroId"><button type="button" class="btn bi bi-trash"></button></a>
+                            </td>
+
+                        </tr>
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        @*Footer*@
+        <div class="card-footer">
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Cobros> ListaCobros { get; set; } = new List<Cobros>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaCobros = await cobrosService.Listar(c => c.CobroId > 0);
+    }
+
+}
