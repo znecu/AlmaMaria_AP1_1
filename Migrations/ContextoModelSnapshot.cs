@@ -51,9 +51,6 @@ namespace AlmaMaria_AP1_1.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Monto")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("CobroId");
 
                     b.HasIndex("DeudorId");
@@ -126,7 +123,8 @@ namespace AlmaMaria_AP1_1.Migrations
 
                     b.HasKey("PrestamoId");
 
-                    b.HasIndex("CobroId");
+                    b.HasIndex("CobroId")
+                        .IsUnique();
 
                     b.HasIndex("DeudorId");
 
@@ -156,8 +154,8 @@ namespace AlmaMaria_AP1_1.Migrations
             modelBuilder.Entity("AlmaMaria_AP1_1.Models.Prestamos", b =>
                 {
                     b.HasOne("AlmaMaria_AP1_1.Models.Cobros", "Cobros")
-                        .WithMany()
-                        .HasForeignKey("CobroId")
+                        .WithOne("Prestamos")
+                        .HasForeignKey("AlmaMaria_AP1_1.Models.Prestamos", "CobroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -186,6 +184,8 @@ namespace AlmaMaria_AP1_1.Migrations
             modelBuilder.Entity("AlmaMaria_AP1_1.Models.Cobros", b =>
                 {
                     b.Navigation("CobroDetalle");
+
+                    b.Navigation("Prestamos");
                 });
 #pragma warning restore 612, 618
         }
