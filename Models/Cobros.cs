@@ -14,9 +14,9 @@ public class Cobros
 
     [Required(ErrorMessage = "Este campo es obligatorio. ")]
     [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un cantidad válida.")]
-    public Decimal Monto { get; set; }
+    public decimal Monto { get; set; }
 
 
-    [ForeignKey("DeudorId")]
-    public ICollection<Deudores> Deudores { get; set; } = new List<Deudores>();
+    [ForeignKey("CobroId")]
+    public ICollection<CobroDetalle> CobroDetalle { get; set; } = new List<CobroDetalle>();
 }
