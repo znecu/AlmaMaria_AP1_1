@@ -11,7 +11,11 @@ public class Cobros
     public Prestamos? Prestamos { get; set; }
 
     [Required]
-    public DateTime Fecha { get; set; }
+    public DateTime Fecha { get; set; } = DateTime.Now;
+
+    [Required(ErrorMessage = "Este campo es obligatorio. ")]
+    [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un número válido. ")]
+    public decimal Monto { get; set; }
 
     public int DeudorId { get; set; }
     [ForeignKey("DeudorId")]
