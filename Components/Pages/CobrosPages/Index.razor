@@ -1,7 +1,7 @@
 ﻿@page "/Cobro/Index"
 @using AlmaMaria_AP1_1.Models
 @using AlmaMaria_AP1_1.Services
-@inject CobroService 
+@inject CobroService cobroService
 @rendermode InteractiveServer
 
 <PageTitle>Index</PageTitle>
@@ -73,7 +73,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaCobros = await cobrosService.Listar(c => c.CobroId > 0);
+        ListaCobros = await cobroService.Listar(c => c.CobroId > 0);
     }
 
 }
