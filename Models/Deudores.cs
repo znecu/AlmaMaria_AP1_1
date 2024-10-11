@@ -7,5 +7,7 @@ public class Deudores
     [Key]
     public int DeudorId { get; set; }
 
-    public string Nombres { get; set; }
+    [Required]
+    [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "En este campo solo se permiten letras. ")]
+    public string? Nombres { get; set; }
 }
