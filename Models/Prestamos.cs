@@ -7,10 +7,7 @@ public class Prestamos
     [Key]
     public int PrestamoId { get; set; }
 
-    [Required]
-    public string? Deudores { get; set; }
-
-    [Required]
+    [Required(ErrorMessage = "Este campo es obligatorio. ")]
     [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "En este campo solo se permiten letras. ")]
     public string? Concepto { get; set; }
 
