@@ -1,6 +1,7 @@
 ﻿@page "/Cobro/Index"
 @using AlmaMaria_AP1_1.Models
 @using AlmaMaria_AP1_1.Services
+@using System.Globalization
 @inject CobroService cobroService
 @rendermode InteractiveServer
 
@@ -16,7 +17,7 @@
         @*Body*@
         <div class="card-body">
 
-            <a href="/Prestamo/Create" class="btn btn-primary">
+            <a href="/Cobro/Create" class="btn btn-primary">
                 <span class="bi bi-plus-square-fill-nav-menu mt-3"></span> Crear
             </a>
 
@@ -28,6 +29,9 @@
                         <th>Deudor</th>
                         <th>Fecha</th>
                         <th>Monto</th>
+                        <th>Ver</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,9 +40,9 @@
                     {
                         <tr>
                             <td>@cobro.CobroId</td>
-                            <td>@cobro.Deudores.Nombres</td>
+                            <td>@cobro.Deudores?.Nombres</td>
                             <td>@cobro.Fecha</td>
-                            <td>@cobro.Monto</td>
+                            <td>@cobro.Monto.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</td>
 
                             @*Observar*@
                             <td class="text-center">
