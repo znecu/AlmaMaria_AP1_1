@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace AlmaMaria_AP1_1.Services;
 
-public class CobrosServices(Contexto contexto)
+public class CobroService(Contexto contexto)
 {
     public async Task<bool> Guardar(Cobros cobro)
     {
@@ -47,6 +47,7 @@ public class CobrosServices(Contexto contexto)
     public async Task<Cobros> Buscar(int id)
     {
         return await contexto.Cobros
+            .Include(d => d.Deudores)
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.CobroId == id);
     }
@@ -54,6 +55,7 @@ public class CobrosServices(Contexto contexto)
     public async Task<List<Cobros>> Listar(Expression<Func<Cobros, bool>> criterio)
     {
         return await contexto.Cobros
+            .Include(d => d.Deudores)
             .AsNoTracking()
             .Where(criterio)
             .ToListAsync();
