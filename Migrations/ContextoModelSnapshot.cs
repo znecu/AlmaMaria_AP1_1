@@ -56,6 +56,8 @@ namespace AlmaMaria_AP1_1.Migrations
 
                     b.HasKey("CobroId");
 
+                    b.HasIndex("DeudorId");
+
                     b.ToTable("Cobros");
                 });
 
@@ -109,14 +111,24 @@ namespace AlmaMaria_AP1_1.Migrations
                     b.Property<decimal>("Balance")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("CobroId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Concepto")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("DeudorId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Monto")
                         .HasColumnType("TEXT");
 
                     b.HasKey("PrestamoId");
+
+                    b.HasIndex("CobroId");
+
+                    b.HasIndex("DeudorId");
 
                     b.ToTable("Prestamos");
                 });
@@ -130,13 +142,40 @@ namespace AlmaMaria_AP1_1.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AlmaMaria_AP1_1.Models.Cobros", b =>
+                {
+                    b.HasOne("AlmaMaria_AP1_1.Models.Deudores", "Deudores")
+                        .WithMany()
+                        .HasForeignKey("DeudorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deudores");
+                });
+
             modelBuilder.Entity("AlmaMaria_AP1_1.Models.Prestamos", b =>
                 {
+                    b.HasOne("AlmaMaria_AP1_1.Models.Cobros", "Cobros")
+                        .WithMany()
+                        .HasForeignKey("CobroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AlmaMaria_AP1_1.Models.Deudores", "Deudores")
+                        .WithMany()
+                        .HasForeignKey("DeudorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AlmaMaria_AP1_1.Models.CobroDetalle", null)
                         .WithMany("Prestamos")
                         .HasForeignKey("PrestamoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Cobros");
+
+                    b.Navigation("Deudores");
                 });
 
             modelBuilder.Entity("AlmaMaria_AP1_1.Models.CobroDetalle", b =>

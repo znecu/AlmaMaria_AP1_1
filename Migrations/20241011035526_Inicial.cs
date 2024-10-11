@@ -14,21 +14,6 @@ namespace AlmaMaria_AP1_1.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cobros",
-                columns: table => new
-                {
-                    CobroId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    DeudorId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Monto = table.Column<decimal>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cobros", x => x.CobroId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Deudores",
                 columns: table => new
                 {
@@ -39,6 +24,27 @@ namespace AlmaMaria_AP1_1.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Deudores", x => x.DeudorId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cobros",
+                columns: table => new
+                {
+                    CobroId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Monto = table.Column<decimal>(type: "TEXT", nullable: false),
+                    DeudorId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cobros", x => x.CobroId);
+                    table.ForeignKey(
+                        name: "FK_Cobros_Deudores_DeudorId",
+                        column: x => x.DeudorId,
+                        principalTable: "Deudores",
+                        principalColumn: "DeudorId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,7 +75,9 @@ namespace AlmaMaria_AP1_1.Migrations
                     PrestamoId = table.Column<int>(type: "INTEGER", nullable: false),
                     Concepto = table.Column<string>(type: "TEXT", nullable: false),
                     Monto = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Balance = table.Column<decimal>(type: "TEXT", nullable: false)
+                    Balance = table.Column<decimal>(type: "TEXT", nullable: false),
+                    CobroId = table.Column<int>(type: "INTEGER", nullable: false),
+                    DeudorId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,6 +87,18 @@ namespace AlmaMaria_AP1_1.Migrations
                         column: x => x.PrestamoId,
                         principalTable: "CobroDetalle",
                         principalColumn: "DetalleId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Prestamos_Cobros_CobroId",
+                        column: x => x.CobroId,
+                        principalTable: "Cobros",
+                        principalColumn: "CobroId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Prestamos_Deudores_DeudorId",
+                        column: x => x.DeudorId,
+                        principalTable: "Deudores",
+                        principalColumn: "DeudorId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -98,14 +118,26 @@ namespace AlmaMaria_AP1_1.Migrations
                 name: "IX_CobroDetalle_CobroId",
                 table: "CobroDetalle",
                 column: "CobroId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cobros_DeudorId",
+                table: "Cobros",
+                column: "DeudorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Prestamos_CobroId",
+                table: "Prestamos",
+                column: "CobroId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Prestamos_DeudorId",
+                table: "Prestamos",
+                column: "DeudorId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Deudores");
-
             migrationBuilder.DropTable(
                 name: "Prestamos");
 
@@ -114,6 +146,9 @@ namespace AlmaMaria_AP1_1.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cobros");
+
+            migrationBuilder.DropTable(
+                name: "Deudores");
         }
     }
 }
