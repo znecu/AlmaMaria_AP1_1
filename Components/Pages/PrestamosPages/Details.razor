@@ -2,7 +2,7 @@
 @page "/Prestamo/Details/{PrestamoId:int}"
 @using AlmaMaria_AP1_1.Models
 @using AlmaMaria_AP1_1.Services
-@inject PrestamosServices prestamosServices
+@inject PrestamoService prestamosServices
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
@@ -18,7 +18,7 @@
         <div class="card-body">       
             <ul class="mt-4">
                 <li><strong>PrestamoId: </strong>@Prestamo.PrestamoId</li>
-                <li><strong>Deudor: </strong>@Prestamo.Deudor</li>
+                 <li><strong>Deudor: </strong>@Prestamo.Deudores.Nombres</li> 
                 <li><strong>Concepto: </strong>@Prestamo.Concepto</li>
                 <li><strong>Monto: </strong>@Prestamo.Monto</li>
 
