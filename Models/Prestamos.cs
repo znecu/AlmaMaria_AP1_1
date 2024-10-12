@@ -13,20 +13,20 @@ public class Prestamos
     public string? Concepto { get; set; }
 
     [Required(ErrorMessage = "Este campo es obligatorio. ")]
-    [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un numero valido")]
+    [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un cantidad válida.")]
     public decimal Monto { get; set; }
 
     [Required(ErrorMessage = "Este campo es obligatorio. ")]
-    [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un número válido. ")]
+    [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un cantidad válida.")]
     public decimal Balance { get; set; }
 
-    public int CobroId { get; set; }
-    [ForeignKey("CobroId")]
     public Cobros? Cobros { get; set; }
 
     public int DeudorId { get; set; }
     [ForeignKey("DeudorId")]
     public Deudores? Deudores { get; set; }
+
+    public ICollection<CobroDetalle> CobrosDetalle { get; set; } = new List<CobroDetalle>();
 
 
 }
