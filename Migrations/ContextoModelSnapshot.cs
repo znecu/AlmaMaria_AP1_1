@@ -36,6 +36,8 @@ namespace AlmaMaria_AP1_1.Migrations
 
                     b.HasIndex("CobroId");
 
+                    b.HasIndex("PrestamoId");
+
                     b.ToTable("CobroDetalle");
                 });
 
@@ -106,12 +108,13 @@ namespace AlmaMaria_AP1_1.Migrations
             modelBuilder.Entity("AlmaMaria_AP1_1.Models.Prestamos", b =>
                 {
                     b.Property<int>("PrestamoId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CobroId")
+                    b.Property<int?>("CobrosCobroId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Concepto")
@@ -126,8 +129,7 @@ namespace AlmaMaria_AP1_1.Migrations
 
                     b.HasKey("PrestamoId");
 
-                    b.HasIndex("CobroId")
-                        .IsUnique();
+                    b.HasIndex("CobrosCobroId");
 
                     b.HasIndex("DeudorId");
 
@@ -136,11 +138,21 @@ namespace AlmaMaria_AP1_1.Migrations
 
             modelBuilder.Entity("AlmaMaria_AP1_1.Models.CobroDetalle", b =>
                 {
-                    b.HasOne("AlmaMaria_AP1_1.Models.Cobros", null)
+                    b.HasOne("AlmaMaria_AP1_1.Models.Cobros", "Cobros")
                         .WithMany("CobroDetalle")
                         .HasForeignKey("CobroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("AlmaMaria_AP1_1.Models.Prestamos", "Prestamo")
+                        .WithMany("CobrosDetalle")
+                        .HasForeignKey("PrestamoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cobros");
+
+                    b.Navigation("Prestamo");
                 });
 
             modelBuilder.Entity("AlmaMaria_AP1_1.Models.Cobros", b =>
@@ -157,20 +169,12 @@ namespace AlmaMaria_AP1_1.Migrations
             modelBuilder.Entity("AlmaMaria_AP1_1.Models.Prestamos", b =>
                 {
                     b.HasOne("AlmaMaria_AP1_1.Models.Cobros", "Cobros")
-                        .WithOne("Prestamos")
-                        .HasForeignKey("AlmaMaria_AP1_1.Models.Prestamos", "CobroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("CobrosCobroId");
 
                     b.HasOne("AlmaMaria_AP1_1.Models.Deudores", "Deudores")
                         .WithMany()
                         .HasForeignKey("DeudorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AlmaMaria_AP1_1.Models.CobroDetalle", null)
-                        .WithMany("Prestamos")
-                        .HasForeignKey("PrestamoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -179,16 +183,14 @@ namespace AlmaMaria_AP1_1.Migrations
                     b.Navigation("Deudores");
                 });
 
-            modelBuilder.Entity("AlmaMaria_AP1_1.Models.CobroDetalle", b =>
-                {
-                    b.Navigation("Prestamos");
-                });
-
             modelBuilder.Entity("AlmaMaria_AP1_1.Models.Cobros", b =>
                 {
                     b.Navigation("CobroDetalle");
+                });
 
-                    b.Navigation("Prestamos");
+            modelBuilder.Entity("AlmaMaria_AP1_1.Models.Prestamos", b =>
+                {
+                    b.Navigation("CobrosDetalle");
                 });
 #pragma warning restore 612, 618
         }
