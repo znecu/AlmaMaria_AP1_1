@@ -1,7 +1,8 @@
 ﻿@page "/Prestamo/Create/"
 @using AlmaMaria_AP1_1.Models
 @using AlmaMaria_AP1_1.Services
-@inject PrestamosServices prestamosServices
+@inject PrestamoService prestamosServices
+@inject CobroService cobroService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
@@ -29,8 +30,14 @@
                 @*Deudor*@
                 <div class="col-2 mt-2">
                     <label class="form-label"><strong>Deudor</strong></label>
-                    <InputText class="form-control" @bind-Value="Prestamo.Deudor"></InputText>
-                    <ValidationMessage For="(()=> Prestamo.Deudor)" />
+                    <InputSelect class="form-select" @bind-Value="Prestamo.DeudorId">
+                        <option value="0" selected disabled>Seleccione un Deudor</option>
+
+                        @foreach (var deudor in ListaDeudor)
+                        {
+                            <option value="@deudor.DeudorId">@deudor.Nombres</option>
+                        }
+                    </InputSelect>
                 </div>
 
                 @*Concepto*@
@@ -39,6 +46,7 @@
                     <InputText class="form-control" @bind-Value="Prestamo.Concepto"></InputText>
                     <ValidationMessage For="(()=> Prestamo.Concepto)" />
                 </div>
+
                 @*Monto*@
                 <div class="col-2 mt-2">
                     <label class="form-label"><strong>Monto</strong></label>
@@ -46,12 +54,19 @@
                     <ValidationMessage For="(()=> Prestamo.Monto)" />
                 </div>
 
+                @*Balance*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>Balance</strong></label>
+                    <InputNumber class="form-control" @bind-Value=Prestamo.Balance></InputNumber>
+                    <ValidationMessage For="(() => Prestamo.Balance)" />
+                </div>
+
             </div>
             @*Footer*@
             <div class="card-footer">
                 <button type="button" class=" btn btn-primary bi bi-arrow-left mt-3" @onclick="() => Volver()">Volver</button>
                 <button type="submit" class=" btn btn-success bi bi-floppy mt-3">Guardar</button>
-                
+
             </div>
         </div>
     </div>
@@ -60,10 +75,14 @@
 
 
 @code {
-
+    public List<Deudores> ListaDeudor { get; set; } = new List<Deudores>();
     public Prestamos Prestamo { get; set; } = new Prestamos();
     public string Mensaje { get; set; } = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        ListaDeudor = await cobroService.ListarDeudores();
+    }
     public async Task Guardar()
     {
         var crear = await prestamosServices.Guardar(Prestamo);
