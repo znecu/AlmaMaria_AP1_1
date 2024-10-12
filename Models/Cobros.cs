@@ -8,19 +8,16 @@ public class Cobros
     [Key]
     public int CobroId { get; set; }
 
-    public Prestamos? Prestamos { get; set; }
-
     [Required]
     public DateTime Fecha { get; set; } = DateTime.Now;
 
     [Required(ErrorMessage = "Este campo es obligatorio. ")]
-    [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un número válido. ")]
+    [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un cantidad válida.")]
     public decimal Monto { get; set; }
 
     public int DeudorId { get; set; }
     [ForeignKey("DeudorId")]
-    public Deudores? Deudores { get; set; }
+    public Deudores? Deudores { get; set; } 
 
-    [ForeignKey("CobroId")]
-    public ICollection<CobroDetalle> CobroDetalle { get; set; } = new List<CobroDetalle>();
+    public ICollection<CobroDetalle> CobroDetalle { get; set; } = new List<CobroDetalle>();  
 }
