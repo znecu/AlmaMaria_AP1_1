@@ -1,6 +1,7 @@
 ﻿@page "/Prestamo/Index/"
 @using AlmaMaria_AP1_1.Models
 @using AlmaMaria_AP1_1.Services
+@using System.Globalization
 @inject NavigationManager navigationManager
 @inject PrestamoService prestamoService
 
@@ -71,6 +72,7 @@
                                 <th>Deudor</th>
                                 <th>Concepto</th>
                                 <th>Monto</th>
+                                <th>Balance</th>
                                 <th>Details</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
@@ -84,7 +86,8 @@
                                     <td>@prestamo.PrestamoId</td>
                                     <td>@prestamo.Deudores.Nombres</td>
                                     <td>@prestamo.Concepto</td>
-                                    <td>@prestamo.Monto</td>
+                                    <td>@prestamo.Monto.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</td>
+                                    <td>@prestamo.Balance.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</td>
 
                                     @*Observar*@
                                     <td class="text-center">
@@ -132,7 +135,7 @@
         {
             if (Filtro == "PrestamoId" && int.TryParse(ValorFiltro, out int cobroId))
             {
-                ListaPrestamos = await prestamoService.Listar(c => c.CobroId == cobroId);
+                // ListaPrestamos = await prestamoService.Listar(c => c.CobroId == cobroId);
 
             }
 
@@ -155,7 +158,7 @@
 
     private async Task Restablecer()
     {
-        ListaPrestamos = await prestamoService.Listar(c => c.CobroId > 0);
+        // ListaPrestamos = await prestamoService.Listar(c => c.CobroId > 0);
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
     }
