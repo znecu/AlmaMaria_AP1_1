@@ -1,28 +1,26 @@
-﻿@page "/Prestamo/Delete/{PrestamoId:int}"
-@using AlmaMaria_AP1_1.Models
-@using AlmaMaria_AP1_1.Services
-@inject PrestamoService prestamosServices
+﻿@page "/Cobro/Delete/{CobroId:int}"
+@inject CobroService cobroService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Delete</PageTitle>
 <div class="container">
     <div class="shadow-lg">
         @*Header*@
         <div class="card-header text-center">
-            <h3><strong>Eliminar un prestamo</strong></h3>
+            <h3><strong>Detalle del cobro</strong></h3>
         </div>
 
         @*Body*@
         <div class="card-body">
             <div class="text-center mt-3">
-                <h5><strong>¿Está seguro de que desea eliminar este prestamo?</strong></h5>
+                <h5<strong>¿Está seguro de que desea eliminar este cobro?</strong></h5>
+
             </div>
             <ul class="mt-4">
-                <li><strong>PrestamoId: </strong>@Prestamo.PrestamoId</li>
-                <li><strong>Deudor: </strong>@Prestamo.Deudores.Nombres</li>
-                <li><strong>Concepto: </strong>@Prestamo.Concepto</li>
-                <li><strong>Monto: </strong>@Prestamo.Monto</li>
+                <li><strong>CobroId: </strong>@Cobro.CobroId</li>
+                <li><strong>Deudor: </strong>@Cobro.Deudores.Nombres</li>
+                <li><strong>Fecha: </strong>@Cobro.Fecha</li>
+                <li><strong>Monto: </strong>@Cobro.Monto</li>
 
             </ul>
         </div>
@@ -30,25 +28,25 @@
         <div class="card-footer">
             <button type="button" class="btn btn-primary bi bi-arrow-left mt-3" @onclick="Volver">Volver</button>
             <button type="button" class="btn btn-danger mt-3" @onclick="Eliminar">Eliminar</button>
-
         </div>
     </div>
 
 </div>
+
 @code {
     [Parameter]
-    public int PrestamoId { get; set; }
-    public Prestamos Prestamo { get; set; } = new Prestamos();
+    public int CobroId { get; set; }
+    public Cobros Cobro { get; set; } = new Cobros();
     public string Mensaje { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        Prestamo = await prestamosServices.Buscar(PrestamoId);
+        Cobro = await cobroService.Buscar(CobroId);
     }
 
     private async Task Eliminar()
     {
-        var Eliminar = await prestamosServices.Eliminar(PrestamoId);
+        var Eliminar = await cobroService.Eliminar(CobroId);
 
         if (Eliminar)
         {
@@ -63,6 +61,6 @@
 
     public void Volver()
     {
-        navigationManager.NavigateTo("/Prestamo/Index");
+        navigationManager.NavigateTo("/Cobro/Index");
     }
 }

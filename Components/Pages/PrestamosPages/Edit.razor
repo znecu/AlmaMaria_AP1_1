@@ -1,7 +1,7 @@
 ﻿@page "/Prestamo/Edit/{PrestamoId:int}"
 @using AlmaMaria_AP1_1.Models
 @using AlmaMaria_AP1_1.Services
-@inject PrestamosServices prestamosServices
+@inject PrestamoService prestamosServices
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
@@ -14,7 +14,7 @@
         <div class="shadow-lg">
             @*Header*@
             <div class="card-header text-center">
-                <h3><strong>Crear prestamo</strong></h3>
+                <h3><strong>Editar prestamo</strong></h3>
             </div>
 
             @*Body*@
@@ -29,7 +29,7 @@
                 @*Deudor*@
                 <div class="col-2 mt-2">
                     <label class="form-label"><strong>Deudor</strong></label>
-                    <InputText class="form-control" @bind-Value="Prestamo.Deudor"></InputText>
+                    @* <InputText class="form-control" @bind-Value="Prestamo."></InputText> *@
                 </div>
 
                 @*Concepto*@

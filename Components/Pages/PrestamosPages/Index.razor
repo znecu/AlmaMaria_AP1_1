@@ -1,8 +1,10 @@
 ﻿@page "/Prestamo/Index/"
 @using AlmaMaria_AP1_1.Models
 @using AlmaMaria_AP1_1.Services
+@using System.Globalization
 @inject NavigationManager navigationManager
-@inject PrestamosServices presamosServices
+@inject PrestamoService prestamoService
+
 @rendermode InteractiveServer
 
 <PageTitle>Index</PageTitle>
@@ -16,78 +18,148 @@
 
         @*Body*@
         <div class="card-body">
+            <div class="row">
 
-            <a href="/Prestamo/Create" class="btn btn-primary">
-                <span class="bi bi-plus-square-fill-nav-menu mt-3"></span> Crear
-            </a>
+                @*Filtrar*@
+                <div class="col-3">
+                    <label class="form-lebel"><strong>Filtrar: </strong></label>
+                </div>
 
-            @*Tabla*@
-            <table class="table table-bordered mt-4">
-                <thead class="table table-striped">
-                    <tr>
-                        <td><strong>PrestamoId</strong></td>
-                        <td><strong>Deudor</strong></td>
-                        <td><strong>Concepto</strong></td>
-                        <td><strong>Monto</strong></td>
-                        <td><strong>Details</strong></td>
-                        <td><strong>Edit</strong></td>
-                        <td><strong>Delete</strong></td>
-                    </tr>
-                </thead>
-                <tbody>
+                @*ValorFiltro*@
+                <div class="col-3">
+                    <label class="form-label"><strong>Buscar</strong></label>
+                </div>
 
-                    @foreach (var prestamo in ListaPrestamos)
-                    {
-                        <tr>
-                            <td>@prestamo.PrestamoId</td>
-                            <td>@prestamo.Deudor</td>
-                            <td>@prestamo.Concepto</td>
-                            <td>@prestamo.Monto</td>
+                @*Botones e Inputs*@
+                <div class="row">
 
-                            @*Observar*@
-                            <td class="text-center">
-                                <a href="/Prestamo/Details/@prestamo.PrestamoId"><button type="button" class=" btn bi bi-eye"></button> </a>
-                            </td>
+                    @*Filtro*@
+                    <div class="col-3 ">
+                        <InputSelect class=" form-select" @bind-Value="Filtro">
+                            <option value="" selected disabled>Elija una opci&oacute;n </option>
+                            <option value="PrestamoId">PrestamoId</option>
+                            <option value="Deudor">Deudor</option>
+                            <option value="Concepto">Concepto</option>
+                        </InputSelect>
+                    </div>
 
-                            @*Editar*@
-                            <td class="text-center">
-                                <a href="/Prestamo/Edit/@prestamo.PrestamoId"><button type="button" class="btn bi bi-pencil"></button></a>
-                            </td>
+                    @*Buscar*@
+                    <div class="col-3">
+                        <div class="input-group">
+                            <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                            <button type="button" class=" btn btn-outline-primary bi bi-search" @onclick=Buscar></button>
+                        </div>
+                    </div>
+                    @*Restablecer*@
+                    <div class="col-3">
+                        <button type="button" class="btn btn-outline-secondary bi bi-arrow-clockwise" @onclick="Restablecer"></button>
+                    </div>
 
-                            @*Eliminar*@
-                            <td class="text-center">
-                                <a href="/Prestamo/Delete/@prestamo.PrestamoId"><button type="button" class="btn bi bi-trash"></button></a>
-                            </td>
 
-                        </tr>
+                    @*Crear*@
+                    <div class="col 1">
+                        <a href="/Prestamo/Create" class="btn btn-primary">
+                            <span class="bi bi-plus-square-fill-nav-menu mt-3"></span> Crear
+                        </a>
 
-                    }
+                    </div>
 
-                </tbody>
-            </table>
-        </div>
-        @*Footer*@
-        <div class="card-footer">
+                    @*Tabla*@
+                    <table class="table table-bordered mt-4">
+                        <thead class="table table-striped">
+                            <tr>
+                                <th>PrestamoId</th>
+                                <th>Deudor</th>
+                                <th>Concepto</th>
+                                <th>Monto</th>
+                                <th>Balance</th>
+                                <th>Details</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var prestamo in ListaPrestamos)
+                            {
+                                <tr>
+                                    <td>@prestamo.PrestamoId</td>
+                                    <td>@prestamo.Deudores.Nombres</td>
+                                    <td>@prestamo.Concepto</td>
+                                    <td>@prestamo.Monto.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</td>
+                                    <td>@prestamo.Balance.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</td>
+
+                                    @*Observar*@
+                                    <td class="text-center">
+                                        <a href="/Prestamo/Details/@prestamo.PrestamoId"><button type="button" class=" btn bi bi-eye"></button> </a>
+                                    </td>
+
+                                    @*Editar*@
+                                    <td class="text-center">
+                                        <a href="/Prestamo/Edit/@prestamo.PrestamoId"><button type="button" class="btn bi bi-pencil"></button></a>
+                                    </td>
+
+                                    @*Eliminar*@
+                                    <td class="text-center">
+                                        <a href="/Prestamo/Delete/@prestamo.PrestamoId"><button type="button" class="btn bi bi-trash"></button></a>
+                                    </td>
+
+                                </tr>
+
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @*Footer*@
+            <div class="card-footer">
+                <p><strong>Cantidad de prestamos: </strong>@ListaPrestamos.Count</p>
+            </div>
         </div>
     </div>
 </div>
-
 @code {
     public List<Prestamos> ListaPrestamos { get; set; } = new List<Prestamos>();
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaPrestamos = await presamosServices.Listar(p => p.PrestamoId > 0);
+        ListaPrestamos = await prestamoService.Listar(p => p.PrestamoId > 0);
     }
-  
+
+    private async Task Buscar()
+    {
+        if (ValorFiltro.Trim() != "")
+        {
+            if (Filtro == "PrestamoId" && int.TryParse(ValorFiltro, out int cobroId))
+            {
+                // ListaPrestamos = await prestamoService.Listar(c => c.CobroId == cobroId);
+
+            }
+
+            else if (Filtro == "Deudor")
+            {
+                ListaPrestamos = await prestamoService.Listar(c => c.Deudores.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+            }
+
+            else if (Filtro == "Concepto")
+            {
+                ListaPrestamos = await prestamoService.Listar(c => c.Concepto.ToLower().Contains(ValorFiltro.ToLower()));
+            }
+
+        }
+        else
+        {
+            ListaPrestamos = await prestamoService.Listar(t => true);
+        }
+    }
+
+    private async Task Restablecer()
+    {
+        // ListaPrestamos = await prestamoService.Listar(c => c.CobroId > 0);
+        Filtro = string.Empty;
+        ValorFiltro = string.Empty;
+    }
 }
-
-@* <a href="#"
-   class="btn btn-primary"
-                    <span class="bi bi-floppy mt-3"></span>Guardar
-                </a>
-
-<a href="#"
-   class="btn btn-primary"
-                    <span class="bi bi-arrow-left mt-3"></span>Volver
-                </a> *@
