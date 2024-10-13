@@ -1,12 +1,12 @@
 ﻿@page "/Cobro/Create"
 @inject CobroService cobroService
+@inject PrestamoService prestamoService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Create</PageTitle>
 <EditForm Model="Cobro" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
-
 
     <div class="container">
         <div class="shadow-lg">
@@ -24,25 +24,22 @@
                     <InputNumber class="form-control" readonly @bind-Value="Cobro.CobroId"></InputNumber>
                 </div>
 
-                @*Deudor*@
-                <div class="col-4 mt-2">
-                    <label class="form-label"><strong>Deudor</strong></label>
-                    <InputSelect class="form-select" @bind-Value="Cobro.DeudorId">
-                        <option value="0" selected disabled>Seleccione un Deudor</option>
-
-                        @foreach(var deudor in ListaDeudor)
-                        {
-                            <option value="@deudor.DeudorId">@deudor.Nombres</option>
-                        }
-
-                    </InputSelect>
-                </div>
-
                 @*Fecha*@
                 <div class="col-2 mt-2">
                     <label class="form-label"><strong>Fecha</strong></label>
                     <InputDate class="form-control" @bind-Value="Cobro.Fecha"></InputDate>
+                </div>
 
+                @*Deudor*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>Deudor</strong></label>
+                    <InputSelect class="form-select" @bind-Value="Seleccionado">
+                        <option value="0" selected disabled>Seleccione un Deudor</option>
+                        @foreach (var deudor in ListaDeudor)
+                        {
+                            <option value="@deudor.DeudorId">@deudor.Nombres</option>
+                        }
+                    </InputSelect>
                 </div>
 
                 @*Monto*@
@@ -52,43 +49,142 @@
                     <ValidationMessage For="(()=> Cobro.Monto)" />
                 </div>
 
+                @*Detalle*@
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="card-title"><strong>Detalle</strong></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+
+                            @*Concepto*@
+                            <div class="col-3 mt-2">
+                                <label class="form-label"><strong>Concepto</strong></label>
+                                <InputSelect class="form-select" @bind-Value="SeleccionarConcepto">
+                                    <option value="0" selected disabled>Seleccione un concepto</option>
+                                    @foreach (var concepto in ListaPrestamo)
+                                    {
+                                        <option value="@concepto.PrestamoId">@concepto.Concepto</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            @*ValorCobrado*@
+                            <div class="col-2 mt-2">
+                                <label class="form-label"><strong>ValorCobrado</strong></label>
+                                <InputNumber class="form-control" @bind-Value="Utilizado"></InputNumber>
+                            </div>
+
+                            @*Agregar*@
+                            <div class="col-auto text-end">
+                                <button type="button" class="btn btn-primary" @onclick="Agregar">Agregar</button>
+                            </div>
+
+                            <table class="table table-bordered table-light m-1">
+                                <thead class="thead">
+                                    <tr class="table">
+                                        <th>PrestamoId</th>
+                                        <th>Concepto</th>
+                                        <th>ValorCobrado</th>
+                                    </tr>
+                                </thead>
+
+                                @*Tabla*@
+                                <tbody>
+                                    @foreach (var detalle in Cobro.CobroDetalle)
+                                    {
+                                        <tr>
+                                            <td>@detalle.PrestamoId</td>
+                                            @if (detalle.Prestamo?.Concepto != null)
+                                            {
+                                                <td>@detalle.Prestamo.Concepto</td>
+                                            }
+                                            else
+                                            {
+                                                <td>Concepto no disponible</td>
+                                            }
+                                            <td>@detalle.ValorCobrado</td>
+                                            <td><button @onclick="@(() => Eliminar(detalle))" class="btn btn-danger" type="button"><i class="oi oi-trash">Eliminar</i></button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             @*Footer*@
             <div class="card-footer">
                 <button type="button" class=" btn btn-primary bi bi-arrow-left mt-3" @onclick="() => Volver()">Volver</button>
                 <button type="submit" class=" btn btn-success bi bi-floppy mt-3">Guardar</button>
-
             </div>
         </div>
     </div>
     @Mensaje
 </EditForm>
 
-
 @code {
     public List<Cobros> ListaCobro { get; set; } = new List<Cobros>();
     public List<Deudores> ListaDeudor { get; set; } = new List<Deudores>();
+    public List<Prestamos> ListaPrestamo { get; set; } = new List<Prestamos>();
+    public Prestamos Prestamo { get; set; } = new Prestamos();
     public Cobros Cobro { get; set; } = new Cobros();
+    public CobroDetalle CobroDetalle { get; set; } = new CobroDetalle();
     public string Mensaje { get; set; } = string.Empty;
+    public int Seleccionado { get; set; }
+    public decimal Utilizado { get; set; }
+    public int SeleccionarConcepto { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         ListaDeudor = await cobroService.ListarDeudores();
+        ListaPrestamo = await prestamoService.Listar(p => p.PrestamoId > 0);
     }
+
     public async Task Guardar()
     {
         var crear = await cobroService.Guardar(Cobro);
+        var aux = await cobroService.Buscar(Cobro.CobroId);
+
+        CobroDetalle.CobroId = aux.CobroId;
 
         if (crear)
         {
             Mensaje = "Creado exitosamente.";
             Volver();
         }
-
         else
         {
             Mensaje = "No se ha podido crear el cobro. ";
         }
+    }
+
+    public void Agregar()
+    {
+        var prestamo = ListaPrestamo
+        .FirstOrDefault(p => p.PrestamoId == SeleccionarConcepto);
+
+        if (prestamo != null)
+        {
+            Cobro.CobroDetalle.Add(new CobroDetalle()
+                {
+                    PrestamoId = SeleccionarConcepto,
+                    Prestamo = prestamo, 
+                    ValorCobrado = Utilizado,
+                });
+
+            SeleccionarConcepto = 0;
+            Utilizado = 0;
+        }
+    }
+
+    public async Task Eliminar(CobroDetalle eliminarDetalle)
+    {
+        Seleccionado = eliminarDetalle.PrestamoId;
+        Utilizado = eliminarDetalle.ValorCobrado;
+
+        Cobro.CobroDetalle.Remove(eliminarDetalle);
     }
 
     public void Volver()
@@ -96,4 +192,3 @@
         navigationManager.NavigateTo("/Cobro/Index");
     }
 }
-
